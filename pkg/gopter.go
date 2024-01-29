@@ -21,3 +21,7 @@ func (o *Optional[T]) Get() (*T, error) {
 	}
 	return v, nil
 }
+
+func (o *Optional[T]) IsEmpty() bool {
+	return o.v == nil
+}
