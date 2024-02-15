@@ -1,6 +1,9 @@
 package pkg
 
-import "errors"
+import (
+	"encoding/json"
+	"errors"
+)
 
 type Optional[T any] struct {
 	v *T
@@ -24,4 +27,16 @@ func (o *Optional[T]) Get() (*T, error) {
 
 func (o *Optional[T]) IsEmpty() bool {
 	return o.v == nil
+}
+
+func (o *Optional[T]) MarshalJSON() ([]byte, error) {
+	if o.v == nil {
+		return []byte("null"), nil
+	} else {
+		m, ok := interface{}(o.v).(json.Marshaler)
+		if ok {
+			return m.MarshalJSON()
+		}
+		return json.Marshal(o.v)
+	}
 }
